@@ -22,9 +22,19 @@ class Category:
         Category.product_count += 1
 
     @property
-    def products(self):
+    def products_list(self):
+        """Геттер, возвращающий продукты относительно одной категории"""
+        return self.__products
+
+    def __str__(self) -> str:
+        """Метод, возвращающий строковое представление категории продукта"""
+        total_quantity = sum(product.quantity for product in self.__products)
+        return f"{self.name}, количество продуктов: {total_quantity} шт."
+
+    @property
+    def products(self) -> str:
         """Возвращает строку со всеми продуктами категории в заданном формате"""
         result = ""
         for product in self.__products:
-            result += f"{product.name}, {product.price} руб. Остаток: {product.quantity} шт.\n"
+            result += f"{str(product)}\n"
         return result
