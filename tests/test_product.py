@@ -1,3 +1,5 @@
+import pytest
+
 from src.product import Product
 
 
@@ -40,3 +42,59 @@ def test_product_initialization_with_empty_strings() -> None:
     assert product.description == ""
     assert product.price == 0.0
     assert product.quantity == 0
+
+
+@pytest.fixture
+def obj_product() -> Product:
+    return Product("iphone", "Описание телефона", 1000000, 10)
+
+
+def price_product(obj_product: Product) -> None:
+    assert obj_product.price == 1000000
+
+
+def test_product_price_setter_negative() -> None:
+    """Тест установки невалидной цены через сеттер"""
+    product = Product("Телефон", "Смартфон", 10000.0, 5)
+    original_price = product.price
+
+    # Пытаемся установить отрицательную цену
+    product.price = -500.0
+    assert product.price == original_price  # Цена не изменилась
+
+    # Пытаемся установить нулевую цену
+    product.price = 0.0
+    assert product.price == original_price
+
+
+def test_new_product_without_existing_products() -> None:
+    """Тест создания нового продукта без существующих продуктов"""
+    params = {"name": "Ноутбук", "description": "Игровой ноутбук", "price": 50000.0, "quantity": 3}
+
+    product = Product.new_product(params)
+
+    assert product.name == "Ноутбук"
+    assert product.description == "Игровой ноутбук"
+    assert product.price == 50000.0
+    assert product.quantity == 3
+
+
+def test_new_product_with_existing_duplicate() -> None:
+    """Тест создания продукта с дубликатом (обновление существующего)"""
+    existing_products = [Product("Телефон", "Старое описание", 10000.0, 5)]
+
+    params = {
+        "name": "Телефон",  # Дубликат по имени
+        "description": "Новое описание",
+        "price": 12000.0,  # Более высокая цена
+        "quantity": 3,  # Добавляемое количество
+    }
+
+    product = Product.new_product(params, existing_products)
+
+    # Проверяем, что это тот же объект
+    assert product is existing_products[0]
+    assert product.name == "Телефон"
+    assert product.description == "Новое описание"  # Описание обновилось
+    assert product.price == 12000.0  # Цена обновилась (максимальная)
+    assert product.quantity == 8
