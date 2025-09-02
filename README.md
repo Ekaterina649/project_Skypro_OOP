@@ -5,11 +5,14 @@
 * src/ -папка, где находятся основные модули
 * src/category.py - модуль, где находится класс с описанием категории продукта
 * src/product.py - модуль, где находится класс с описанием продукта
+* src/category_iter.py - модуль, где находится класс, в котором можно перебирать товары одной категории
+
 
 
 * tests/ - папка с тестами проекта
 * tests/test_category.py - тестирование модуля category.py
 * tests/test_product.py - тестирование модуля product.py
+* tests/test_category_iter.py - тестирование модуля category_iter.py
 
 * poetry.lock - зависимости проекта
 

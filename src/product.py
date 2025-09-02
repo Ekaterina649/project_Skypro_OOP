@@ -29,6 +29,13 @@ class Product:
         else:
             self.__price = new_price
 
+    def __str__(self) -> str:
+        return f"{self.name}, {self.price} руб. Остаток: {self.quantity} шт."
+
+    def __add__(self, other) -> float:
+        """Метод, складывающий стоимость товаров на складе"""
+        return self.quantity * self.price + other.quantity * other.price
+
     @classmethod
     def new_product(
         cls, params_product: Dict[str, Any], existing_products: Optional[List["Product"]] = None
@@ -46,5 +53,7 @@ class Product:
                         existing_product.price = price
                     if description:
                         existing_product.description = description
-                return existing_product
+                    return existing_product
+
+        # Если дубликат не найден - создаем новый продукт
         return cls(name, description, price, quantity)

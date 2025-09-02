@@ -49,6 +49,11 @@ def obj_product() -> Product:
     return Product("iphone", "Описание телефона", 1000000, 10)
 
 
+def test_str(obj_product) -> None:
+    product_str = str(obj_product)
+    assert product_str == "iphone, 1000000 руб. Остаток: 10 шт."
+
+
 def price_product(obj_product: Product) -> None:
     assert obj_product.price == 1000000
 

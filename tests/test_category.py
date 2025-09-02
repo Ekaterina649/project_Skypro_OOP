@@ -17,6 +17,18 @@ def category_obj():
     )
 
 
+def test_category_str_with_products(category_obj):
+    """Тест строкового представления категории с товарами"""
+    category_str = str(category_obj)
+    assert category_str == "Смартфоны, количество продуктов: 45 шт."
+
+
+def test_category_str_empty(empty_category):
+    """Тест строкового представления пустой категории"""
+    category_str = str(empty_category)
+    assert category_str == "Смартфоны, количество продуктов: 0 шт."
+
+
 def test_category_init(category_obj) -> None:
     assert category_obj.name == "Смартфоны"
     assert (
@@ -41,6 +53,13 @@ def empty_category():
 def sample_product():
     """Фикстура для тестового продукта"""
     return Product("iPhone", "Смартфон", 100000.0, 10)
+
+
+def test_product_str_after_quantity_change(sample_product):
+    """Тест строкового представления продукта после изменения количества"""
+    sample_product.quantity = 5
+    product_str = str(sample_product)
+    assert product_str == "iPhone, 100000.0 руб. Остаток: 5 шт."
 
 
 def test_add_product_to_empty_category(empty_category, sample_product):
@@ -139,5 +158,5 @@ def test_mixed_categories_with_duplicate_products() -> None:
     assert Category.product_count == 2  # Два продукта в двух категориях
     assert category1.name == "Категория 1"
     assert category2.name == "Категория 2"
-    assert len(category1.products.split('\n')) == 2  # 1 продукт + пустая строка
-    assert len(category2.products.split('\n')) == 2
+    assert len(category1.products.split("\n")) == 2  # 1 продукт + пустая строка
+    assert len(category2.products.split("\n")) == 2
