@@ -15,7 +15,7 @@ def smartphone_product():
         efficiency="Высокая",
         model="15 Pro",
         memory="256GB",
-        color="черный"
+        color="черный",
     )
 
 
@@ -30,7 +30,7 @@ def another_smartphone():
         efficiency="Средняя",
         model="S23",
         memory="128GB",
-        color="синий"
+        color="синий",
     )
 
 
@@ -56,8 +56,9 @@ def test_smartphone_addition_same_type(smartphone_product, another_smartphone):
     """Тест сложения двух объектов Smartphone"""
     total_cost = smartphone_product + another_smartphone
 
-    expected_cost = (smartphone_product.quantity * smartphone_product.price +
-                     another_smartphone.quantity * another_smartphone.price)
+    expected_cost = (
+        smartphone_product.quantity * smartphone_product.price + another_smartphone.quantity * another_smartphone.price
+    )
 
     assert total_cost == expected_cost
     assert total_cost == (50 * 100000.0 + 30 * 80000.0)

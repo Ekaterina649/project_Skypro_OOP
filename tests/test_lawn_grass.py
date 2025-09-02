@@ -14,7 +14,7 @@ def lawn_grass_product():
         quantity=100,
         country="Россия",
         germination_period="14 дней",
-        color="зеленый"
+        color="зеленый",
     )
 
 
@@ -28,7 +28,7 @@ def another_lawn_grass():
         quantity=50,
         country="Беларусь",
         germination_period="21 день",
-        color="темно-зеленый"
+        color="темно-зеленый",
     )
 
 
@@ -53,8 +53,9 @@ def test_lawn_grass_addition_same_type(lawn_grass_product, another_lawn_grass):
     """Тест сложения двух объектов LawnGrass"""
     total_cost = lawn_grass_product + another_lawn_grass
 
-    expected_cost = (lawn_grass_product.quantity * lawn_grass_product.price +
-                     another_lawn_grass.quantity * another_lawn_grass.price)
+    expected_cost = (
+        lawn_grass_product.quantity * lawn_grass_product.price + another_lawn_grass.quantity * another_lawn_grass.price
+    )
 
     assert total_cost == expected_cost
     assert total_cost == (100 * 1500.0 + 50 * 1000.0)

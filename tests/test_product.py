@@ -54,20 +54,23 @@ def obj_product() -> Product:
 @pytest.fixture
 def obj_product_2() -> Product:
     """Фикстура создания экземпляра продукта"""
-    return Product("samsung","Описание2", 40000, 14)
+    return Product("samsung", "Описание2", 40000, 14)
+
 
 @pytest.fixture
 def obj_no_product() -> Product:
     """Фикстура создания экземпляра продукта"""
-    return Smartphone("Samsung Galaxy S23 Ultra", "256GB, Серый цвет, 200MP камера", 180000.0, 5, 95.5,
-                         "S23 Ultra", 256, "Серый")
+    return Smartphone(
+        "Samsung Galaxy S23 Ultra", "256GB, Серый цвет, 200MP камера", 180000.0, 5, 95.5, "S23 Ultra", 256, "Серый"
+    )
 
-def test_addit_class_object_product(obj_product: Product,obj_product_2: Product) -> None:
+
+def test_addit_class_object_product(obj_product: Product, obj_product_2: Product) -> None:
     """Тест, проверяющий корректное сложение объектов одного класса"""
     assert obj_product + obj_product_2 == 10560000
 
 
-def test_addit_error(obj_product: Product,obj_no_product: Smartphone) -> None:
+def test_addit_error(obj_product: Product, obj_no_product: Smartphone) -> None:
     """Тест, проверяющий, что возбуждается ошибка при сложении объектов разных классов"""
     with pytest.raises(TypeError):
         obj_product + obj_no_product

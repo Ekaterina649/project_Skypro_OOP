@@ -87,6 +87,7 @@ def test_add_product_invalid_type(empty_category: Category) -> None:
     # Проверяем, что список продуктов не изменился
     assert len(empty_category.products_list) == 0
 
+
 def test_product_str_after_quantity_change(sample_product: Product) -> None:
     """Тест строкового представления продукта после изменения количества"""
     sample_product.quantity = 5
