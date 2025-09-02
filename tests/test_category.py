@@ -44,25 +44,57 @@ def test_category_init(category_obj) -> None:
 
 
 @pytest.fixture
-def empty_category():
+def empty_category() -> Category:
     """Фикстура для пустой категории"""
     return Category("Смартфоны", "Описание", [])
 
 
 @pytest.fixture
-def sample_product():
+def sample_product() -> Product:
     """Фикстура для тестового продукта"""
     return Product("iPhone", "Смартфон", 100000.0, 10)
 
 
-def test_product_str_after_quantity_change(sample_product):
+@pytest.fixture
+def another_product() -> Product:
+    """Фикстура для другого тестового продукта"""
+    return Product("Samsung", "Смартфон", 80000.0, 15)
+
+
+def test_add_product_valid(empty_category: Category, sample_product: Product) -> None:
+    """Тест добавления корректного продукта в категорию"""
+    initial_product_count = Category.product_count
+    initial_category_products = len(empty_category.products_list)
+
+    # Добавляем продукт
+    empty_category.add_product(sample_product)
+
+    # Проверяем, что продукт добавлен в список категории
+    assert len(empty_category.products_list) == initial_category_products + 1
+    assert empty_category.products_list[-1] == sample_product
+
+    # Проверяем, что счетчик продуктов увеличился
+    assert Category.product_count == initial_product_count + 1
+
+
+def test_add_product_invalid_type(empty_category: Category) -> None:
+    """Тест добавления объекта неверного типа"""
+    invalid_product = "не продукт"
+
+    with pytest.raises(TypeError, match="Можно добавлять только объекты класса Product или его наследников"):
+        empty_category.add_product(invalid_product)
+
+    # Проверяем, что список продуктов не изменился
+    assert len(empty_category.products_list) == 0
+
+def test_product_str_after_quantity_change(sample_product: Product) -> None:
     """Тест строкового представления продукта после изменения количества"""
     sample_product.quantity = 5
     product_str = str(sample_product)
     assert product_str == "iPhone, 100000.0 руб. Остаток: 5 шт."
 
 
-def test_add_product_to_empty_category(empty_category, sample_product):
+def test_add_product_to_empty_category(empty_category: Category, sample_product: Product) -> None:
     """Тест добавления продукта в пустую категорию"""
     initial_count = Category.product_count
     empty_category.add_product(sample_product)
@@ -71,7 +103,7 @@ def test_add_product_to_empty_category(empty_category, sample_product):
     assert Category.product_count == initial_count + 1
 
 
-def test_add_multiple_products(empty_category):
+def test_add_multiple_products(empty_category: Category) -> None:
     """Тест добавления нескольких продуктов"""
     product1 = Product("iPhone", "Смартфон", 100000.0, 10)
     product2 = Product("Samsung", "Смартфон", 80000.0, 15)
