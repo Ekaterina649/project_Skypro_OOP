@@ -1,6 +1,7 @@
 import pytest
 
 from src.product import Product
+from src.smartphone import Smartphone
 
 
 def test_product_initialization_with_valid_data() -> None:
@@ -46,15 +47,43 @@ def test_product_initialization_with_empty_strings() -> None:
 
 @pytest.fixture
 def obj_product() -> Product:
+    """Фикстура создания экземпляра продукта"""
     return Product("iphone", "Описание телефона", 1000000, 10)
 
 
-def test_str(obj_product) -> None:
+@pytest.fixture
+def obj_product_2() -> Product:
+    """Фикстура создания экземпляра продукта"""
+    return Product("samsung", "Описание2", 40000, 14)
+
+
+@pytest.fixture
+def obj_no_product() -> Product:
+    """Фикстура создания экземпляра продукта"""
+    return Smartphone(
+        "Samsung Galaxy S23 Ultra", "256GB, Серый цвет, 200MP камера", 180000.0, 5, 95.5, "S23 Ultra", 256, "Серый"
+    )
+
+
+def test_addit_class_object_product(obj_product: Product, obj_product_2: Product) -> None:
+    """Тест, проверяющий корректное сложение объектов одного класса"""
+    assert obj_product + obj_product_2 == 10560000
+
+
+def test_addit_error(obj_product: Product, obj_no_product: Smartphone) -> None:
+    """Тест, проверяющий, что возбуждается ошибка при сложении объектов разных классов"""
+    with pytest.raises(TypeError):
+        obj_product + obj_no_product
+
+
+def test_str(obj_product: Product) -> None:
+    """Проверяет, что выводится корректная строка"""
     product_str = str(obj_product)
     assert product_str == "iphone, 1000000 руб. Остаток: 10 шт."
 
 
 def price_product(obj_product: Product) -> None:
+    """Проверяет, что выводится корректная цена"""
     assert obj_product.price == 1000000
 
 
