@@ -1,7 +1,10 @@
 from typing import Any, Dict, List, Optional
 
+from src.base_product import BaseProduct
+from src.print_mixin import PrintMixin
 
-class Product:
+
+class Product(BaseProduct, PrintMixin):
     """Класс для описания продукта"""
 
     name: str
@@ -11,23 +14,8 @@ class Product:
 
     def __init__(self, name, description, price, quantity):
         """Метод для инициализации экземпляра класса. Задаем значения атрибутам экземпляра."""
-        self.name = name
-        self.description = description
-        self.__price = price
-        self.quantity = quantity
-
-    @property
-    def price(self) -> float:
-        """Геттер, возвращающий цену продукта"""
-        return self.__price
-
-    @price.setter
-    def price(self, new_price: float) -> None:
-        """Сеттер, устанавливающий новую цену продукта"""
-        if new_price <= 0:
-            print("Цена не должна быть нулевая или отрицательная")
-        else:
-            self.__price = new_price
+        BaseProduct.__init__(self, name, description, price, quantity)
+        PrintMixin.__init__(self)
 
     def __str__(self) -> str:
         return f"{self.name}, {self.price} руб. Остаток: {self.quantity} шт."

@@ -36,7 +36,8 @@ class Category:
     @property
     def products(self) -> str:
         """Возвращает строку со всеми продуктами категории в заданном формате"""
-        result = ""
-        for product in self.__products:
-            result += f"{str(product)}\n"
-        return result
+        return self.__products
+
+    def __len__(self):
+        """Позволяет использовать len(category) для подсчёта товаров"""
+        return len(self.__products)
