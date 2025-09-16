@@ -32,15 +32,16 @@ def test_category_str_empty(empty_category):
 def test_category_init(category_obj) -> None:
     assert category_obj.name == "Смартфоны"
     assert (
-        category_obj.description
-        == "Смартфоны, как средство не только коммуникации, но и получения дополнительных функций для удобства жизни"
+            category_obj.description
+            == "Смартфоны, как средство не только коммуникации, но и получения дополнительных функций для удобства жизни"
     )
 
-    # Теперь проверяем через свойство products
-    products_str = category_obj.products
-    assert "iPhone, 100000.0 руб. Остаток: 10 шт." in products_str
-    assert "Samsung, 80000.0 руб. Остаток: 15 шт." in products_str
-    assert "Xiaomi, 50000.0 руб. Остаток: 20 шт." in products_str
+    # Теперь проверяем через свойство products_list (а не products)
+    products_list = category_obj.products_list
+    assert len(products_list) == 3
+    assert products_list[0].name == "iPhone"
+    assert products_list[1].name == "Samsung"
+    assert products_list[2].name == "Xiaomi"
 
 
 @pytest.fixture
@@ -99,8 +100,11 @@ def test_add_product_to_empty_category(empty_category: Category, sample_product:
     """Тест добавления продукта в пустую категорию"""
     initial_count = Category.product_count
     empty_category.add_product(sample_product)
-    products_str = empty_category.products
-    assert "iPhone, 100000.0 руб. Остаток: 10 шт." in products_str
+
+    # Проверяем, что продукт добавлен в список
+    products_list = empty_category.products_list
+    assert len(products_list) == 1
+    assert products_list[0].name == "iPhone"
     assert Category.product_count == initial_count + 1
 
 
@@ -116,12 +120,13 @@ def test_add_multiple_products(empty_category: Category) -> None:
     empty_category.add_product(product2)
     empty_category.add_product(product3)
 
-    products_str = empty_category.products
+    products_list = empty_category.products_list
 
     # Проверяем все продукты
-    assert "iPhone, 100000.0 руб. Остаток: 10 шт." in products_str
-    assert "Samsung, 80000.0 руб. Остаток: 15 шт." in products_str
-    assert "Xiaomi, 50000.0 руб. Остаток: 20 шт." in products_str
+    assert len(products_list) == 3
+    assert products_list[0].name == "iPhone"
+    assert products_list[1].name == "Samsung"
+    assert products_list[2].name == "Xiaomi"
 
     # Проверяем счетчик
     assert Category.product_count == initial_count + 3
@@ -129,6 +134,7 @@ def test_add_multiple_products(empty_category: Category) -> None:
 
 def test_initial_counters_zero() -> None:
     """Тест, что начальные значения счетчиков равны 0"""
+    # Сбрасываем счетчики
     Category.category_count = 0
     Category.product_count = 0
 
@@ -142,17 +148,17 @@ def test_multiple_categories_counters() -> None:
     Category.category_count = 0
     Category.product_count = 0
 
-    # Создаем несколько категорий
-    category1 = Category("Электроника", "Электронные устройства", ["1", "2"])
-    category2 = Category("Книги", "Книги и журналы", ["3", "4"])
-    category3 = Category("Одежда", "Одежда и аксессуары", ["5", "6"])
+    # Создаем несколько категорий с продуктами
+    product1 = Product("Телевизор", "Электроника", 50000.0, 5)
+    product2 = Product("Наушники", "Электроника", 10000.0, 8)
 
-    # Используем переменные в asserts
+    category1 = Category("Электроника", "Электронные устройства", [product1, product2])
+    category2 = Category("Книги", "Книги и журналы", [])
+    category3 = Category("Одежда", "Одежда и аксессуары", [])
+
+    # Проверяем счетчики
     assert Category.category_count == 3
-    assert Category.product_count == 6
-    assert category1.name == "Электроника"
-    assert category2.name == "Книги"
-    assert category3.name == "Одежда"
+    assert Category.product_count == 2  # Только 2 продукта в первой категории
 
 
 @pytest.fixture
@@ -163,14 +169,16 @@ def empty_category_params():
 
 def test_empty_category_counter(empty_category_params) -> None:
     """Тест подсчета для пустой категории"""
+    # Сбрасываем счетчики
     Category.category_count = 0
     Category.product_count = 0
+
     name, description, products = empty_category_params
     category = Category(name, description, products)
 
     assert Category.category_count == 1
     assert Category.product_count == 0
-    assert len(category.products) == 0
+    assert len(category.products_list) == 0
 
 
 def test_mixed_categories_with_duplicate_products() -> None:
@@ -186,10 +194,19 @@ def test_mixed_categories_with_duplicate_products() -> None:
     category1 = Category("Категория 1", "Описание 1", [common_product])
     category2 = Category("Категория 2", "Описание 2", [common_product])
 
-    # Используем переменные в asserts
+    # Проверяем счетчики
     assert Category.category_count == 2
     assert Category.product_count == 2  # Два продукта в двух категориях
     assert category1.name == "Категория 1"
     assert category2.name == "Категория 2"
-    assert len(category1.products.split("\n")) == 2  # 1 продукт + пустая строка
-    assert len(category2.products.split("\n")) == 2
+    assert len(category1.products_list) == 1
+    assert len(category2.products_list) == 1
+
+
+def test_category_len_method(category_obj, empty_category):
+    """Тест метода __len__ для категории"""
+    # Для категории с товарами
+    assert len(category_obj) == 3  # Количество продуктов в списке
+
+    # Для пустой категории
+    assert len(empty_category) == 0  # Пустой список продуктов
