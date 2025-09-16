@@ -14,8 +14,11 @@ class Product(BaseProduct, PrintMixin):
 
     def __init__(self, name, description, price, quantity):
         """Метод для инициализации экземпляра класса. Задаем значения атрибутам экземпляра."""
-        BaseProduct.__init__(self, name, description, price, quantity)
-        PrintMixin.__init__(self)
+        if quantity == 0:
+            raise ValueError("Товар с нулевым количеством не может быть добавлен")
+        else:
+            BaseProduct.__init__(self, name, description, price, quantity)
+            PrintMixin.__init__(self)
 
     def __str__(self) -> str:
         return f"{self.name}, {self.price} руб. Остаток: {self.quantity} шт."

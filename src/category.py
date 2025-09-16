@@ -1,5 +1,5 @@
 from src.product import Product
-
+from src.exceptions import ZeroQuantityCategory
 
 class Category:
     """Класс для описания категории продукта"""
@@ -20,8 +20,17 @@ class Category:
         """Метод для добавления новых продуктов в категорию"""
         if not isinstance(new_product, Product):
             raise TypeError("Можно добавлять только объекты класса Product или его наследников")
-        self.__products.append(new_product)
-        Category.product_count += 1
+        try:
+            if new_product.quantity == 0:
+                raise ZeroQuantityCategory ("Нельзя добавить товар в категорию с нулевым количеством")
+            else:
+                self.__products.append(new_product)
+                Category.product_count += 1
+                print(f"Товар '{new_product.name}' успешно добавлен в категорию '{self.name}'")
+        except ZeroQuantityCategory as e:
+            print(str(e))
+        finally:
+            print("Обработка добавления товара завершена")
 
     @property
     def products_list(self):
@@ -41,3 +50,15 @@ class Category:
     def __len__(self):
         """Позволяет использовать len(category) для подсчёта товаров"""
         return len(self.__products)
+
+    def middle_price(self):
+        try:
+            if len(self.__products) == 0:
+                return 0
+            total_price = sum(product.price for product in self.__products)
+            return total_price / len(self.__products)
+        except ZeroDivisionError:
+            return 0
+
+
+
