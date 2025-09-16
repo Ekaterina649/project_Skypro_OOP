@@ -1,3 +1,5 @@
+from unittest.mock import Mock
+
 import pytest
 
 from src.category import Category
@@ -210,3 +212,44 @@ def test_category_len_method(category_obj, empty_category):
 
     # Для пустой категории
     assert len(empty_category) == 0  # Пустой список продуктов
+
+
+def test_add_product_zero_quantity_output(empty_category: Category, capsys):
+    """Тест вывода сообщения при добавлении товара с нулевым количеством"""
+
+    # Создаем Product объект без вызова __init__
+    zero_quantity_product = Product.__new__(Product)
+    zero_quantity_product.name = "Бракованный"
+    zero_quantity_product.description = "Товар"
+    zero_quantity_product.price = 1000.0
+    zero_quantity_product.quantity = 0
+
+    empty_category.add_product(zero_quantity_product)
+
+    captured = capsys.readouterr()
+    output = captured.out.strip()
+
+    assert "Нельзя добавить товар в категорию с нулевым количеством" in output
+    assert "Обработка добавления товара завершена" in output
+    assert "успешно добавлен" not in output
+    assert len(empty_category.products_list) == 0
+
+def test_add_product_quantity(empty_category: Category, capsys):
+    """Тест вывода сообщения при добавлении товара с количеством"""
+
+    # Создаем Product объект без вызова __init__
+    zero_quantity_product = Product.__new__(Product)
+    zero_quantity_product.name = "Бракованный"
+    zero_quantity_product.description = "Товар"
+    zero_quantity_product.price = 1000.0
+    zero_quantity_product.quantity = 10
+
+    empty_category.add_product(zero_quantity_product)
+
+    captured = capsys.readouterr()
+    output = captured.out.strip()
+
+    assert "Нельзя добавить товар в категорию с нулевым количеством" not in output
+    assert "Обработка добавления товара завершена" in output
+    assert "успешно добавлен" in output
+    assert len(empty_category.products_list) == 1
