@@ -7,7 +7,7 @@ from src.smartphone import Smartphone
 def test_print_mixin_with_product(capsys):
     """Тест миксина с классом Product"""
     product = Product("iPhone", "Смартфон", 100000.0, 10)
-
+    captured = product.print_info()
     captured = capsys.readouterr()
     expected_output = "Product('iPhone', 'Смартфон', 100000.0, 10)"
     assert captured.out.strip() == expected_output
@@ -24,6 +24,7 @@ def test_print_mixin_with_lawn_grass(capsys):
         "14 дней",
         "зеленый"
     )
+    captured = lawn_grass.print_info()
 
     captured = capsys.readouterr()
     expected_output = "LawnGrass('Газонная трава', 'Качественная газонная трава', 500.0, 20)"
@@ -42,6 +43,7 @@ def test_print_mixin_with_smartphone(capsys):
         "256GB",
         "черный"
     )
+    captured = smartphone.print_info()
 
     captured = capsys.readouterr()
     expected_output = "Smartphone('Samsung Galaxy', 'Флагманский смартфон', 80000.0, 15)"

@@ -28,21 +28,21 @@ def test_product_initialization_with_different_data_types() -> None:
 
 def test_product_initialization_with_zero_quantity() -> None:
     """Тест инициализации с нулевым количеством"""
-    product = Product("Товар", "Описание", 1000.0, 0)
+    with pytest.raises(ValueError,match='Товар с нулевым количеством не может быть добавлен'):
+        product = Product("Товар", "Описание", 1000.0, 0)
 
-    assert product.quantity == 0
-    assert product.name == "Товар"
-    assert product.price == 1000.0
+
 
 
 def test_product_initialization_with_empty_strings() -> None:
     """Тест инициализации с пустыми строками"""
-    product = Product("", "", 0.0, 0)
+    product = Product("", "", 0.0, 10)
 
     assert product.name == ""
     assert product.description == ""
     assert product.price == 0.0
-    assert product.quantity == 0
+
+    assert product.quantity == 10
 
 
 @pytest.fixture
